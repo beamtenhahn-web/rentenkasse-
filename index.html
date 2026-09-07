@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beitragserstattung für Beamte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:none;text-size-adjust:none}
+button{font:inherit;color:inherit}
+:root{
+  --paper:#FBFAF7;--card:#FFFFFF;--fill:rgba(23,26,33,.043);
+  --line:rgba(23,26,33,.14);--line-soft:rgba(23,26,33,.08);
+  --ink:#171A21;--body:#5A6069;--muted:#9A9DA6;
+  --gold:#E9971B;--gold-text:#8A560A;--gold-light:#FFB95D;--gold-fill:rgba(233,151,27,.10);
+  --blue:#2F6BFF;--blue-fill:rgba(47,107,255,.06);
+  --teal:#2FA39C;--teal-fill:rgba(47,163,156,.08);
+  --alert:#A8321F;--alert-fill:rgba(168,50,31,.055);
+  --d1:#171D2B;
+  --display:"Space Grotesk",system-ui,sans-serif;
+  --sans:"Instrument Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r-lg:26px;--r-md:16px;--r-sm:14px;
+  --shadow:0 1px 2px rgba(0,0,0,.06);
+  --shadow-lift:0 1px 2px rgba(0,0,0,.05),0 10px 30px rgba(23,26,33,.055);
+}
+html{scroll-behavior:smooth;scroll-padding-top:1.2rem}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--paper);color:var(--body);font-family:var(--sans);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);color:var(--ink);margin:0;text-wrap:balance}
+h1{font-size:clamp(2.2rem,5.6vw,3.4rem);font-weight:700;letter-spacing:-.035em;line-height:1.04}
+h2{font-size:clamp(1.6rem,3.4vw,2.2rem);font-weight:700;letter-spacing:-.032em;line-height:1.1}
+h3{font-size:clamp(1.18rem,2vw,1.38rem);font-weight:600;letter-spacing:-.022em}
+h4{font-size:1.02rem;font-weight:600;letter-spacing:-.012em}
+p{margin:0}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:normal;font-weight:600;color:var(--gold-text)}
+a{color:var(--gold-text)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+.wrap{max-width:900px;margin:0 auto;padding:0 clamp(1.1rem,5vw,2rem)}
+.eyebrow{font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-text);display:inline-flex;align-items:center;gap:.7rem}
+.eyebrow::before{content:"";width:20px;height:1px;background:currentColor;opacity:.8;flex:none}
+main{display:flex;flex-direction:column;gap:3.6rem;padding-bottom:4rem}
+section{display:flex;flex-direction:column;gap:1.25rem;scroll-margin-top:1.5rem}
+.prose{display:flex;flex-direction:column;gap:1rem;max-width:68ch}
+.shead{display:flex;flex-direction:column;gap:.8rem}
+
+header.cover{position:relative;overflow:hidden;padding:clamp(2rem,6vw,3.2rem) 0 clamp(2rem,4vw,2.8rem)}
+header.cover::before{content:"";position:absolute;left:-15%;right:-15%;top:-40%;height:640px;background:radial-gradient(52% 55% at 22% 42%,rgba(233,151,27,.17),rgba(233,151,27,0) 72%);pointer-events:none}
+header.cover>.wrap{position:relative}
+.brandline{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding-bottom:2.2rem}
+.logo{font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:-.03em;color:var(--ink)}
+.logo span{color:var(--gold-text)}
+.badge{font-family:var(--mono);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;background:var(--gold-fill);color:var(--gold-text);padding:.4rem .8rem;border-radius:999px}
+.cover h1 .g{color:var(--gold-text)}
+.lede{font-size:clamp(1rem,1.7vw,1.16rem);line-height:1.55;margin-top:1.2rem;max-width:60ch}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem;margin-top:1.7rem}
+.hint{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:.9rem}
+.stats{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:2.4rem;padding-top:1.7rem;border-top:1px solid var(--line-soft)}
+.st .v{font-family:var(--display);font-weight:700;font-size:1.45rem;letter-spacing:-.03em;color:var(--ink);line-height:1.15}
+.st .l{font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:.3rem;line-height:1.6}
+
+.box{border:1px solid var(--line-soft);border-left:3px solid var(--gold);background:var(--card);border-radius:var(--r-sm);padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.55rem;max-width:72ch;box-shadow:var(--shadow)}
+.box .h{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-text)}
+.box p{font-size:.95rem}
+.box.blue{border-left-color:var(--blue);background:var(--blue-fill)}
+.box.blue .h{color:var(--blue)}
+.box.teal{border-left-color:var(--teal);background:var(--teal-fill)}
+.box.teal .h{color:#1c6b66}
+.box.alert{border-left-color:var(--alert);background:var(--alert-fill)}
+.box.alert .h{color:var(--alert)}
+.box q{font-style:normal;color:var(--ink)}
+
+.cards{display:grid;gap:.85rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:1.25rem;display:flex;flex-direction:column;gap:.5rem;box-shadow:var(--shadow)}
+.card .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.card p{font-size:.93rem}
+
+ul.plain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.62rem;max-width:70ch}
+ul.plain li{position:relative;padding-left:1.45rem;font-size:.96rem}
+ul.plain li::before{content:"";position:absolute;left:0;top:.66em;width:8px;height:2px;border-radius:2px;background:var(--gold)}
+ul.plain.no li::before{background:var(--alert)}
+ol.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:flex;flex-direction:column;gap:.9rem;max-width:70ch}
+ol.steps li{counter-increment:s;position:relative;padding-left:2.5rem;font-size:.96rem}
+ol.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.12em;font-family:var(--mono);font-size:.74rem;color:var(--gold-text)}
+
+.split{background:var(--d1);border-radius:var(--r-lg);padding:clamp(1.5rem,4vw,2.2rem);box-shadow:var(--shadow-lift);display:grid;gap:1.6rem}
+@media (min-width:720px){.split{grid-template-columns:1fr 1fr;gap:2rem}}
+.sp{display:flex;flex-direction:column;gap:.5rem}
+.sp .k{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-light)}
+.sp h4{color:#fff;font-size:1.15rem}
+.sp p{color:rgba(255,255,255,.72);font-size:.94rem}
+
+.files{background:var(--d1);border-radius:var(--r-lg);padding:clamp(1.25rem,4vw,2.1rem);display:flex;flex-direction:column;gap:1.3rem;box-shadow:var(--shadow-lift)}
+.files .fh{display:flex;flex-direction:column;gap:.55rem}
+.files .fh .eyebrow{color:var(--gold-light)}
+.files .fh h3{color:#fff;font-size:clamp(1.25rem,2.4vw,1.55rem)}
+.files .fh p{color:rgba(255,255,255,.66);font-size:.94rem;max-width:56ch}
+.dl{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.dlcard{background:var(--card);border-radius:var(--r-md);padding:1.35rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;transition:transform .16s,box-shadow .16s}
+.dlcard:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.3)}
+.dlcard .chip{align-self:flex-start;font-family:var(--mono);font-size:.57rem;letter-spacing:.14em;text-transform:uppercase;background:var(--gold-fill);color:var(--gold-text);padding:.3rem .62rem;border-radius:999px;margin-bottom:.15rem}
+.dlcard h4{color:var(--ink);font-size:1.08rem}
+.dlcard p{font-size:.9rem;color:var(--body)}
+.dlcard .go{display:flex;align-items:center;gap:.6rem;margin-top:.65rem;font-weight:600;font-size:.93rem;color:var(--ink)}
+.dlcard .go i{font-style:normal;flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:999px;background:var(--gold);color:#14161A;font-size:.85rem;transition:transform .16s}
+.dlcard:hover .go i{transform:translateX(3px)}
+
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(23,29,43,.97);border-top:1px solid rgba(255,255,255,.12);padding:.72rem clamp(1rem,5vw,2rem);transform:translateY(120%);transition:transform .28s ease;box-shadow:0 -8px 30px rgba(0,0,0,.18)}
+.dock.on{transform:none}
+.dock .in{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:.9rem}
+.dock .tx{flex:1;min-width:0}
+.dock .s{font-family:var(--mono);font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-light)}
+.dock .t{font-family:var(--display);font-weight:600;font-size:.95rem;color:#fff;line-height:1.25;margin-top:.15rem}
+.dock a{flex:none;background:var(--gold);color:#14161A;font-weight:600;font-size:.88rem;padding:.62rem 1.1rem;border-radius:999px;text-decoration:none;white-space:nowrap}
+.dock a:hover{filter:brightness(1.06)}
+@media (max-width:400px){.dock .t{font-size:.86rem}.dock a{padding:.6rem .9rem;font-size:.84rem}}
+
+.cta{background:var(--d1);border-radius:var(--r-lg);padding:clamp(1.7rem,4vw,2.5rem);display:flex;flex-direction:column;gap:.9rem;box-shadow:var(--shadow-lift)}
+.cta .eyebrow{color:var(--gold-light)}
+.cta h3{color:#fff;font-size:clamp(1.3rem,2.6vw,1.7rem);max-width:24ch}
+.cta p{color:rgba(255,255,255,.72);max-width:58ch;font-size:.97rem}
+.btn{display:inline-flex;align-items:center;gap:.6rem;align-self:flex-start;background:var(--gold);color:#14161A;font-weight:600;font-size:1rem;padding:.9rem 1.7rem;border-radius:999px;text-decoration:none;transition:transform .15s,filter .15s,background .15s;box-shadow:0 6px 18px rgba(233,151,27,.28)}
+.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.cta .btn{margin-top:.4rem}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none;font-size:.95rem;padding:.85rem 1.45rem}
+.btn.ghost:hover{background:var(--fill);filter:none}
+
+.legal{background:var(--fill);border-radius:var(--r-md);padding:1.3rem 1.5rem;display:flex;flex-direction:column;gap:.6rem;font-size:.85rem;line-height:1.58}
+.legal .h{font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.srcs{font-size:.8rem;line-height:1.75;color:var(--muted)}
+.srcs b{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);display:block;margin-bottom:.4rem}
+footer{margin-top:1.2rem;color:var(--muted);font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;line-height:1.9}
+@media print{
+  body{background:#fff}
+  .split,.cta{background:#fff;border:1px solid #ccc}
+  .sp h4,.cta h3{color:#111}.sp p,.cta p{color:#333}.sp .k,.cta .eyebrow{color:#8A560A}
+  .btn{background:#fff;color:#111;border:1px solid #111;padding:.4rem 1rem}
+  .dock,.actions{display:none}
+  .files{background:#fff;border:1px solid #ccc}
+  .files .fh h3{color:#111}.files .fh p{color:#333}.files .fh .eyebrow{color:#8A560A}
+  .dlcard{border:1px solid #ddd}
+  .box,.card,.dlcard,.legal{box-shadow:none;break-inside:avoid}
+  h2,h3{break-after:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="cover" id="hero">
+  <div class="wrap">
+    <div class="brandline">
+      <div class="logo">BEAMTEN<span>HAHN</span></div>
+      <div class="badge">Rechtsstand 7. September 2026</div>
+    </div>
+    <div class="eyebrow">Beitragserstattung aus der gesetzlichen Rentenversicherung</div>
+    <h1>Bei der Rentenkasse liegt<br>noch Geld von dir.<br><span class="g">Nur: Rausholen ist endgültig.</span></h1>
+    <p class="lede">Wer vor der Verbeamtung angestellt war, hat Beiträge in der gesetzlichen Rentenversicherung stehen. Unter bestimmten Voraussetzungen kannst du sie dir auszahlen lassen — gibst dafür aber alle bisherigen Rentenanwartschaften auf. Diese Seite zeigt, wann das geht, was du bekommst und was du dafür verlierst.</p>
+
+    <div class="actions">
+      <a class="btn" href="#unterlagen">Erklärung und Antrag ansehen <i aria-hidden="true">↓</i></a>
+      <a class="btn ghost" href="https://beamtenhahn.de/kontakt" target="_blank" rel="noopener">Termin buchen</a>
+    </div>
+    <p class="hint">Formular V0900 · Erläuterungen V0910 · beides ohne Anmeldung</p>
+
+    <div class="stats">
+      <div class="st"><div class="v">60 Monate</div><div class="l">Allgemeine Wartezeit für eine Rente</div></div>
+      <div class="st"><div class="v">24 Monate</div><div class="l">Sperrfrist vor der Erstattung</div></div>
+      <div class="st"><div class="v">§ 210 SGB VI</div><div class="l">Die maßgebliche Rechtsgrundlage</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- 01 -->
+<section id="worum">
+  <div class="shead">
+    <div class="eyebrow">01 — Die Ausgangslage</div>
+    <h2>Zwei Wege, eine Entscheidung</h2>
+  </div>
+
+  <div class="prose">
+    <p>Angenommen, du warst vor der Verbeamtung drei Jahre angestellt. In dieser Zeit sind Beiträge in die gesetzliche Rentenversicherung geflossen — dein eigener Anteil und der deines Arbeitgebers. Daraus sind Rentenanwartschaften entstanden.</p>
+    <p>Mit der Verbeamtung endet das. Du bist nach § 5 Abs. 1 Satz 1 Nr. 1 SGB VI versicherungsfrei und baust stattdessen Beamtenversorgung auf. In der Rentenkasse stehen jetzt zum Beispiel 36 Beitragsmonate.</p>
+    <p>Für eine Regelaltersrente brauchst du aber die <strong>allgemeine Wartezeit von fünf Jahren</strong> — also 60 Kalendermonate (§ 50 Abs. 1 in Verbindung mit § 122 Abs. 2 SGB VI). Mit 36 Monaten bekommst du daraus nie eine Rente.</p>
+  </div>
+
+  <div class="split">
+    <div class="sp">
+      <div class="k">Weg A</div>
+      <h4>Stehen lassen</h4>
+      <p>Die Monate bleiben liegen. Später eine gesetzliche Rente daraus zu bekommen, setzt voraus, dass du die 60 Monate doch noch erreichst — etwa durch freiwillige Beiträge oder eine spätere Beschäftigung.</p>
+    </div>
+    <div class="sp">
+      <div class="k">Weg B</div>
+      <h4>Erstatten lassen</h4>
+      <p>Du beantragst die Beitragserstattung mit dem Formular V0900. Du bekommst deine selbst getragenen Beiträge ausgezahlt — und dein bisheriges Versicherungsverhältnis wird aufgelöst.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="wer">
+  <div class="shead">
+    <div class="eyebrow">02 — Voraussetzungen</div>
+    <h2>Wer darf überhaupt</h2>
+  </div>
+
+  <div class="prose">
+    <p>Die Regelung für Beamte steht in <strong>§ 210 Abs. 1a SGB VI</strong>. Satz 1 lautet: „Beiträge werden auf Antrag auch Versicherten erstattet, die versicherungsfrei oder von der Versicherungspflicht befreit sind, wenn sie die allgemeine Wartezeit nicht erfüllt haben."</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="k">Kommt in Betracht</div>
+      <h4>Dauerhaft versicherungsfreie Status</h4>
+      <p>Beamte und Richter auf Lebenszeit sowie Berufssoldaten. Entscheidend ist, dass die Versicherungsfreiheit nicht von vornherein befristet ist.</p>
+    </div>
+    <div class="card">
+      <div class="k">Vorerst gesperrt</div>
+      <h4>Befristete Status</h4>
+      <p>Beamte und Richter auf Zeit oder auf Probe, Soldaten auf Zeit und Beamte auf Widerruf im Vorbereitungsdienst. Das steht ausdrücklich in § 210 Abs. 1a Satz 3 Nr. 2 SGB VI.</p>
+    </div>
+  </div>
+
+  <div class="box blue">
+    <div class="h">Das Wort, auf das es ankommt</div>
+    <p>Die Norm sagt: Beiträge werden nicht erstattet, <q>solange Versicherte als Beamte oder Richter auf Zeit oder auf Probe, Soldaten auf Zeit, Beamte auf Widerruf im Vorbereitungsdienst versicherungsfrei oder nur befristet von der Versicherungspflicht befreit sind.</q></p>
+    <p><strong>„Solange" heißt: Die Sperre ist zeitlich, nicht endgültig.</strong> Wer als Beamter auf Probe abgelehnt würde, kann nach der Ernennung auf Lebenszeit neu beantragen. Der Gedanke dahinter: Bei einem befristeten Status steht noch nicht fest, dass jemand dauerhaft außerhalb der Rentenversicherung bleibt.</p>
+  </div>
+
+  <div class="box">
+    <div class="h">Die zweite Frist: 24 Monate</div>
+    <p>Nach § 210 Abs. 2 SGB VI werden Beiträge <q>nur erstattet, wenn seit dem Ausscheiden aus der Versicherungspflicht 24 Kalendermonate abgelaufen sind und nicht erneut Versicherungspflicht eingetreten ist.</q> Diese Frist gilt auch für den Beamtenfall.</p>
+    <p>Verwechsle sie nicht mit der Wartezeit: <em>60 Monate</em> sind die Mindestversicherungszeit für eine Rente. <em>24 Monate</em> sind die Sperrfrist, die vor einer Erstattung ablaufen muss. War dein letzter versicherungspflichtiger Monat Juni 2026, läuft sie bis Juni 2028.</p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="hoehe">
+  <div class="shead">
+    <div class="eyebrow">03 — Der Betrag</div>
+    <h2>Was du tatsächlich bekommst</h2>
+  </div>
+
+  <div class="prose">
+    <p>Hier liegt der häufigste Irrtum. Du bekommst nicht alles zurück, was für dich an die Rentenversicherung geflossen ist. § 210 Abs. 3 Satz 1 SGB VI: „Beiträge werden in der Höhe erstattet, in der die Versicherten sie getragen haben." Bei normaler Beschäftigung heißt das: <strong>dein Arbeitnehmeranteil</strong>. Der Arbeitgeberanteil bleibt bei der Rentenversicherung.</p>
+    <p>Der Absatz kennt allerdings drei Ausnahmen, die in den meisten Erklärungen fehlen:</p>
+  </div>
+
+  <ul class="plain">
+    <li>War ein <strong>Nettoarbeitsentgelt</strong> vereinbart, wird der vom Arbeitgeber getragene Arbeitnehmeranteil erstattet.</li>
+    <li>Beiträge aus einer <strong>selbständigen Tätigkeit</strong>, aus einer Beschäftigung nach § 20 Abs. 2 SGB IV sowie <strong>freiwillige Beiträge</strong> werden zur Hälfte erstattet.</li>
+    <li>Beiträge der <strong>Höherversicherung</strong> werden in voller Höhe erstattet.</li>
+  </ul>
+
+  <div class="box alert">
+    <div class="h">Der Denkfehler beim Arbeitgeberanteil</div>
+    <p>„Dann lasse ich es lieber stehen, da steckt ja auch das Geld meines Arbeitgebers drin." Der Arbeitgeberanteil liegt aber nicht als persönliches Guthaben für dich bereit. Er hat gemeinsam mit deinen Beiträgen Anwartschaften finanziert — und die gibst du bei einer Erstattung ohnehin auf.</p>
+    <p>Die richtige Frage lautet deshalb nicht, ob du 100 Prozent zurückbekommst. Sie lautet: <em>Was ist mehr wert — der Erstattungsbetrag heute oder die Rentenrechte, auf die ich dafür verzichte?</em></p>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="preis">
+  <div class="shead">
+    <div class="eyebrow">04 — Der Preis</div>
+    <h2>Alles oder nichts</h2>
+  </div>
+
+  <div class="prose">
+    <p>§ 210 Abs. 6 SGB VI ist der wichtigste Absatz der ganzen Vorschrift:</p>
+  </div>
+
+  <div class="box alert">
+    <div class="h">§ 210 Abs. 6 SGB VI</div>
+    <p><q>Der Antrag auf Erstattung kann nicht auf einzelne Beitragszeiten oder Teile der Beiträge beschränkt werden. Mit der Erstattung wird das bisherige Versicherungsverhältnis aufgelöst. Ansprüche aus den bis zur Erstattung zurückgelegten rentenrechtlichen Zeiten bestehen nicht mehr.</q></p>
+  </div>
+
+  <div class="prose">
+    <p>Du kannst also nicht die drei gut bezahlten Jahre stehen lassen und dir die zwei Ausbildungsjahre auszahlen lassen. Es geht nur zusammen.</p>
+    <p>Und es betrifft nicht nur die Monate, für die du Geld siehst. Auch rentenrechtliche Zeiten, für die du selbst nie Beiträge gezahlt hast — Zeiten aus Arbeitslosengeldbezug, schulischer Ausbildung oder Wehr- und Zivildienst — sind danach weg. Ausgezahlt bekommst du sie nicht, verlieren tust du sie trotzdem.</p>
+    <p><strong>Und wenn du später wieder angestellt bist?</strong> Dann baust du selbstverständlich neue Ansprüche auf. Die Zeiten vor der Erstattung leben aber nicht wieder auf — sie bestehen nach dem Gesetzeswortlaut schlicht nicht mehr.</p>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="fallen">
+  <div class="shead">
+    <div class="eyebrow">05 — Zwei Fallen</div>
+    <h2>Was die Entscheidung kippen kann</h2>
+  </div>
+
+  <div class="box alert">
+    <div class="h">Falle 1 — Freiwillige Beiträge sind eine Einbahnstraße</div>
+    <p>Um die fehlenden Monate bis zur Wartezeit aufzufüllen, kann man sich als versicherungsfreie Person nach § 7 Abs. 1 SGB VI freiwillig versichern. Was dabei fast nie gesagt wird: <strong>Wer das tut, verliert den Erstattungsanspruch.</strong></p>
+    <p>§ 210 Abs. 1a Satz 3 Nr. 1 SGB VI: Beiträge werden nicht erstattet, <q>wenn während einer Versicherungsfreiheit oder Befreiung von der Versicherungspflicht von dem Recht der freiwilligen Versicherung nach § 7 Gebrauch gemacht wurde.</q></p>
+    <p>Wer also erst freiwillig einzahlt und es sich danach anders überlegt, kommt nicht zurück. Die Reihenfolge entscheidet — erst rechnen, dann handeln.</p>
+  </div>
+
+  <div class="box alert">
+    <div class="h">Falle 2 — Kindererziehungszeiten, aber nicht so, wie oft behauptet</div>
+    <p>Kindererziehungszeiten können auf die allgemeine Wartezeit angerechnet werden und dadurch die 60 Monate voll machen — dann ist eine Erstattung nicht mehr möglich, weil die Voraussetzung „Wartezeit nicht erfüllt" entfällt.</p>
+    <p><strong>Für Beamte gilt das aber häufig gerade nicht.</strong> § 56 Abs. 4 Nr. 3 SGB VI schließt Elternteile von der Anrechnung aus, wenn sie während der Erziehungszeit Versorgungsanwartschaften erworben haben, die gleichwertig berücksichtigt werden — und die Norm nennt ausdrücklich <q>eine Versorgung nach beamtenrechtlichen Vorschriften oder Grundsätzen</q>.</p>
+    <p>Heißt: Wer <em>während</em> des aktiven Beamtenverhältnisses erzieht, bekommt die Zeiten in der Rentenversicherung regelmäßig nicht angerechnet. Wer <em>vor</em> der Verbeamtung erzogen hat, sehr wohl. Das entscheidet der Versicherungsverlauf, nicht das Bauchgefühl.</p>
+  </div>
+
+  <div class="box blue">
+    <div class="h">Nicht verwechseln: Nachversicherung</div>
+    <p>Scheidest du ohne Anspruch oder Anwartschaft auf Versorgung aus dem Beamtenverhältnis aus, greift die <strong>Nachversicherung</strong> nach § 8 Abs. 2 SGB VI — der Dienstherr zahlt dann rückwirkend Beiträge in die gesetzliche Rentenversicherung ein. Das ist ein anderer Weg als die Beitragserstattung und wird oft damit vermischt.</p>
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="rechnung">
+  <div class="shead">
+    <div class="eyebrow">06 — Die Rechnung</div>
+    <h2>Kapital heute gegen Rente später</h2>
+  </div>
+
+  <div class="prose">
+    <p>Wer mit 30 Jahren Beamter auf Lebenszeit ist und 30 oder 40 Monate in der Rentenkasse stehen hat, bekommt mit der Erstattung heute einen Betrag, der über mehr als drei Jahrzehnte arbeiten kann. Die Alternative ist eine später einsetzende, lebenslange gesetzliche Rente — vorausgesetzt, die 60 Monate werden überhaupt erreicht.</p>
+    <p>Das sind zwei verschiedene Konzepte: Kapital mit eigener Verantwortung und eigenem Anlagerisiko auf der einen Seite, eine gesetzlich definierte lebenslange Leistung auf der anderen. Welche Seite besser ist, lässt sich ohne Rechnung nicht sagen.</p>
+  </div>
+
+  <div class="box teal">
+    <div class="h">Der Punkt, den nur Beamte haben</div>
+    <p>Eine spätere gesetzliche Rente kommt bei dir nicht einfach zur Pension obendrauf. § 55 BeamtVG regelt für Bundesbeamte das Zusammentreffen: <q>Versorgungsbezüge werden neben Renten nur bis zum Erreichen der in Absatz 2 bezeichneten Höchstgrenze gezahlt.</q> Übersteigt die Gesamtversorgung diese Grenze, ruht die Versorgung entsprechend.</p>
+    <p>Das heißt <strong>nicht</strong>, dass jede Rente von der Pension abgezogen wird. Es heißt: Eine gesetzliche Rente muss immer zusammen mit deinem Versorgungsrecht betrachtet werden. Für Landesbeamte gilt das jeweilige Landesrecht — in Bayern etwa Art. 85 BayBeamtVG mit wortgleicher Regelung.</p>
+    <p>Genau das kann die Erstattung wirtschaftlich interessanter machen. Automatisch tut es das nicht.</p>
+  </div>
+
+  <h3>Vier Fälle, vier Antworten</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="k">Fall A</div>
+      <h4>30 Monate, 30 Jahre alt, Lebenszeit</h4>
+      <p>Zur Wartezeit fehlt viel, der Anlagehorizont ist lang. Die Erstattung ist hier wirtschaftlich am ehesten interessant.</p>
+    </div>
+    <div class="card">
+      <div class="k">Fall B</div>
+      <h4>58 Monate</h4>
+      <p>Zwei Monate bis zu einem lebenslangen Rentenanspruch. Hier gehört zwingend eine Gegenrechnung hin, bevor irgendetwas beantragt wird.</p>
+    </div>
+    <div class="card">
+      <div class="k">Fall C</div>
+      <h4>Kinder vorhanden</h4>
+      <p>Erst den Versicherungsverlauf prüfen. Erziehung vor der Verbeamtung zählt, Erziehung im aktiven Beamtenverhältnis meist nicht.</p>
+    </div>
+    <div class="card">
+      <div class="k">Fall D</div>
+      <h4>Beamter auf Probe</h4>
+      <p>Noch gesperrt. Der Antrag kommt frühestens nach der Ernennung auf Lebenszeit in Betracht — und auch dann erst nach Ablauf der 24 Monate.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section id="pruefen">
+  <div class="shead">
+    <div class="eyebrow">07 — Vor dem Antrag</div>
+    <h2>Vier Zahlen, die du brauchst</h2>
+  </div>
+
+  <ol class="steps">
+    <li><strong>Wie viele Monate zählen tatsächlich zur allgemeinen Wartezeit?</strong> Nicht schätzen — den Versicherungsverlauf bei der Deutschen Rentenversicherung anfordern und hineinschauen.</li>
+    <li><strong>Wie hoch wäre die Erstattung wirklich?</strong> Nicht alle Rentenbeiträge zusammenrechnen. Der Arbeitgeberanteil gehört im Regelfall nicht dazu.</li>
+    <li><strong>Welche Zeiten gehen verloren?</strong> Auch solche, für die du nie selbst gezahlt hast — Ausbildung, Arbeitslosigkeit, gegebenenfalls Kindererziehung.</li>
+    <li><strong>Was wäre die Alternative wert?</strong> Fehlende Monate auffüllen und später Rente beziehen, gegen Kapital heute selbst anlegen. Und dabei die Ruhensregelung deines Versorgungsrechts mitdenken.</li>
+  </ol>
+
+  <div class="box">
+    <div class="h">Warum das Formular so viel abfragt</div>
+    <p>V0900 fragt nach Versicherungszeiten, ausländischen Zeiten, freiwilligen Beiträgen, Kindererziehungszeiten, Nachversicherung, Versorgungsausgleich, Beamtenstatus, Dienstbeginn und Versorgungsträger. Die Rentenversicherung muss prüfen, ob du die Wartezeit womöglich doch schon erfüllst, welche Beiträge überhaupt erstattungsfähig sind und ob du wirklich dauerhaft versicherungsfrei bist. Es ist kein Formular zum schnellen Ausfüllen.</p>
+    <p><a href="#unterlagen">Erklärung und Antrag findest du direkt darunter →</a></p>
+  </div>
+</section>
+
+<!-- 08 DOWNLOADS -->
+<section id="unterlagen">
+  <div class="shead">
+    <div class="eyebrow">08 — Die Unterlagen</div>
+    <h2>Erklärung und Antrag</h2>
+  </div>
+
+  <div class="files">
+    <div class="fh">
+      <div class="eyebrow">Direkt öffnen</div>
+      <h3>Beide Dokumente auf einen Klick</h3>
+      <p>Eines zum Verstehen, eines zum Ausfüllen. Die Dateien öffnen sich in einem neuen Tab.</p>
+    </div>
+    <div class="dl">
+      <a class="dlcard" href="https://drive.google.com/file/d/1hjNLf6ZZrMQa-IIOUltdF1LQQKkKclNM/view?usp=drive_link" target="_blank" rel="noopener">
+        <span class="chip">01 — Zum Verstehen</span>
+        <h4>Die Erklärung</h4>
+        <p>Worum es bei der Beitragserstattung geht und was die Entscheidung bedeutet.</p>
+        <span class="go">Dokument öffnen <i aria-hidden="true">→</i></span>
+      </a>
+      <a class="dlcard" href="https://drive.google.com/file/d/177_L667CJb1rkDhRU1j_0cJRXq_DfvXT/view?usp=drive_link" target="_blank" rel="noopener">
+        <span class="chip">02 — Zum Ausfüllen</span>
+        <h4>Der Antrag</h4>
+        <p>Das Formular, mit dem der Antrag bei der Deutschen Rentenversicherung gestellt wird.</p>
+        <span class="go">Antrag öffnen <i aria-hidden="true">→</i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="box blue">
+    <div class="h">Zwei Hinweise zu den Formularen</div>
+    <p>Das aktuelle Formular der Deutschen Rentenversicherung heißt <strong>V0900 — Antrag auf Beitragserstattung bei Aufenthalt im Inland</strong>. Für einen Wohnsitz im Ausland gibt es stattdessen V0901.</p>
+    <p>Die amtlichen Erläuterungen dazu heißen <strong>V0910</strong>. Wer den Antrag ausfüllt, sollte sie danebenlegen — dort steht, welche Angaben die Rentenversicherung wofür braucht.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="termin">
+  <div class="cta">
+    <div class="eyebrow">Der nächste Schritt</div>
+    <h3>Rechne es durch, bevor du unterschreibst.</h3>
+    <p>Die Beitragserstattung ist eine der wenigen Entscheidungen im Beamtenleben, die sich nicht zurücknehmen lässt. Ob sie sich für dich lohnt, hängt von deinem Versicherungsverlauf, deinem Alter und deinem Versorgungsrecht ab. Ich berate seit über zehn Jahren ausschließlich den öffentlichen Dienst — wenn du die Rechnung einmal sauber aufgestellt haben willst, melde dich.</p>
+    <a class="btn" href="https://beamtenhahn.de/kontakt" target="_blank" rel="noopener">Termin buchen</a>
+  </div>
+</section>
+
+<!-- RECHTLICHES -->
+<section id="rechtliches">
+  <div class="legal">
+    <div class="h">Wichtiger Hinweis</div>
+    <p>Dieser Leitfaden ist eine allgemeine Information und ausdrücklich <strong>keine Beratung im Einzelfall</strong>. Er ersetzt weder eine Rechts- oder Steuerberatung noch eine individuelle Renten-, Finanz- oder Versicherungsberatung. Ob eine Beitragserstattung möglich und sinnvoll ist, hängt vom persönlichen Versicherungsverlauf ab; verbindliche Auskünfte erteilt allein die Deutsche Rentenversicherung.</p>
+    <p>Alle Angaben wurden am 7. September 2026 anhand der genannten Rechtsgrundlagen recherchiert. Gesetze und Formulare ändern sich. Für Richtigkeit, Vollständigkeit und Aktualität wird keine Gewähr übernommen, eine Haftung ist ausgeschlossen, soweit gesetzlich zulässig.</p>
+  </div>
+
+  <div class="srcs">
+    <b>Rechtsgrundlagen</b>
+    § 210 Abs. 1a, 2, 3 und 6 SGB VI · § 5 Abs. 1 Satz 1 Nr. 1 SGB VI · § 7 Abs. 1 SGB VI · § 8 Abs. 2 SGB VI · § 50 Abs. 1 SGB VI · § 51 Abs. 1 SGB VI · § 56 Abs. 4 Nr. 3 SGB VI · § 122 Abs. 2 SGB VI · § 55 BeamtVG · Art. 85 BayBeamtVG · Deutsche Rentenversicherung, Formular V0900 und Erläuterungen V0910, Stand 02.03.2026 · Deutsche Rentenversicherung, Broschüre „Beitragserstattung", 21. Auflage, Stand 01.06.2026 · Wissenschaftlicher Dienst des Deutschen Bundestages, WD 6 - 3000 - 009/24 vom 14.05.2024
+  </div>
+
+  <footer>Beamtenhahn · Beitragserstattung aus der gesetzlichen Rentenversicherung · Rechtsstand 31.08.2026</footer>
+</section>
+
+</main>
+
+<div class="dock" id="dock">
+  <div class="in">
+    <div class="tx">
+      <div class="s">Die Unterlagen</div>
+      <div class="t">Erklärung und Antrag V0900</div>
+    </div>
+    <a href="#unterlagen">Ansehen</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var dock=document.getElementById('dock'),
+      hero=document.getElementById('hero'),
+      dl=document.getElementById('unterlagen');
+  if(!dock||!hero||!dl||!('IntersectionObserver' in window))return;
+  var heroOut=false,seen=false;
+  function upd(){dock.classList.toggle('on',heroOut&&!seen);}
+  new IntersectionObserver(function(e){heroOut=!e[0].isIntersecting;upd();}).observe(hero);
+  new IntersectionObserver(function(e){if(e[0].isIntersecting){seen=true;upd();}}).observe(dl);
+  dock.querySelector('a').addEventListener('click',function(){seen=true;upd();});
+})();
+</script>
+</body>
+</html>
